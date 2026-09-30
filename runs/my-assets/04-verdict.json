@@ -1,0 +1,96 @@
+{
+  "screen": "my-assets",
+  "result": "pass",
+  "failed": [],
+  "warned": [],
+  "return_to": null,
+  "gates": {
+    "G1-1": {
+      "status": "pass",
+      "count": 5,
+      "detail": []
+    },
+    "G1-2": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G1-3": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G2-1": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G2-2": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G2-3": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-1": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-2": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-3": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-4": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-5": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-6": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-7": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-8": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-9": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    },
+    "G3-10": {
+      "status": "pass",
+      "count": 0,
+      "detail": []
+    }
+  },
+  "attempts": {
+    "1": 0,
+    "2": 0,
+    "3": 0
+  },
+  "halt": false,
+  "judged_at": "2026-09-30T16:13:59"
+}

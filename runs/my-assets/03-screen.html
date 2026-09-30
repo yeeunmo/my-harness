@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>내 자산</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+  :root {
+    --text: #0A0A0A;
+    --strong: #3D3D3D;
+    --sub: #8A8A8A;
+    --line: #E5E5E5;
+    --surface: #F5F5F5;
+    --bg: #FFFFFF;
+    --accent: #D4FF3A;
+    --on-accent: #0A0A0A;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--surface);
+    color: var(--text);
+    font-family: Pretendard, sans-serif;
+  }
+  button, input, textarea {
+    font-family: Pretendard, sans-serif;
+    color: var(--text);
+  }
+  button { cursor: pointer; background: var(--bg); }
+  a { color: inherit; text-decoration: none; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  h1, h2, h3, p { margin: 0; }
+
+  main {
+    width: 390px;
+    height: 844px;
+    overflow-y: auto;
+    margin: 0 auto;
+    background: var(--bg);
+    position: relative;
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+
+  /* ---------- header ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 0 20px;
+  }
+  .index {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--sub);
+  }
+  .index i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--text);
+  }
+  .role-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--strong);
+    background: var(--surface);
+  }
+  .head {
+    padding: 20px 20px 24px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .head-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .head h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+  .head p {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--sub);
+  }
+  .btn-accent {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .btn-accent svg { width: 12px; height: 12px; }
+
+  /* ---------- tabs ---------- */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px 8px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--strong);
+    white-space: nowrap;
+  }
+  .tab .count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--strong);
+    line-height: 20px;
+  }
+  .tab[aria-selected="true"] {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--bg);
+  }
+  .tab[aria-selected="true"] .count {
+    background: var(--strong);
+    color: var(--bg);
+  }
+
+  /* ---------- section common ---------- */
+  .section { padding: 24px 20px; }
+  .section + .section { border-top: 1px solid var(--line); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-head h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .section-head span {
+    font-size: 12px;
+    color: var(--sub);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- import from submissions ---------- */
+  .import-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    padding: 16px;
+  }
+  .import-card > p {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--strong);
+  }
+  .import-card > p svg { flex: none; width: 16px; height: 16px; margin-top: 4px; color: var(--text); }
+  .import-list { margin-top: 12px; }
+  .import-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+  .import-list li:last-child { padding-bottom: 0; }
+  .import-meta { min-width: 0; }
+  .import-meta .mission { font-size: 12px; color: var(--sub); font-weight: 600; }
+  .import-meta .title {
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .import-meta .date { margin-top: 4px; font-size: 12px; color: var(--sub); }
+  .btn-outline {
+    flex: none;
+    padding: 8px 12px;
+    border: 1px solid var(--text);
+    border-radius: 999px;
+    background: var(--bg);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ---------- asset list ---------- */
+  .asset-list li {
+    border-top: 1px solid var(--line);
+  }
+  .asset-list li:last-child { border-bottom: 1px solid var(--line); }
+  .asset-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 0;
+  }
+  .asset-body { flex: 1; min-width: 0; }
+  .kind {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sub);
+  }
+  .asset-title {
+    margin-top: 4px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .vis {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--sub);
+  }
+  .vis b { color: var(--strong); font-weight: 600; }
+  .hint {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--sub);
+  }
+  .comment {
+    display: block;
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--strong);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .comment b { color: var(--text); font-weight: 700; }
+  .asset-side {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-top: 20px;
+    color: var(--sub);
+  }
+  .asset-side > svg { width: 16px; height: 16px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--strong);
+    white-space: nowrap;
+  }
+  .badge svg { width: 12px; height: 12px; }
+  .badge[data-badge="draft"] { border-style: dashed; border-color: var(--sub); }
+  .badge[data-badge="approved"] { border-color: var(--text); color: var(--text); }
+  .badge[data-badge="rejected"] { color: var(--sub); }
+  .badge[data-badge="revision_requested"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  /* ---------- empty ---------- */
+  .empty {
+    padding: 40px 20px;
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .empty p { font-size: 16px; font-weight: 700; }
+  .empty small { display: block; margin-top: 8px; font-size: 12px; color: var(--sub); }
+  .empty .btn-accent { margin-top: 16px; }
+
+  /* ---------- form ---------- */
+  form { position: relative; }
+  .form-intro {
+    font-size: 14px;
+    color: var(--sub);
+    margin-bottom: 20px;
+  }
+  .field { margin-bottom: 24px; }
+  .label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .req {
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 20px;
+    background: var(--text);
+    color: var(--bg);
+  }
+  .opt {
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 20px;
+    border: 1px solid var(--line);
+    color: var(--sub);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--strong);
+  }
+  .chip[aria-pressed="true"] {
+    border-color: var(--text);
+    color: var(--text);
+    font-weight: 700;
+  }
+  .input-box {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg);
+    padding: 12px 16px 8px 16px;
+  }
+  .input-box input, .input-box textarea {
+    display: block;
+    width: 100%;
+    border: 0;
+    padding: 0;
+    background: var(--bg);
+    font-size: 16px;
+    line-height: 1.5;
+    outline: none;
+    resize: none;
+  }
+  .input-box input::placeholder, .input-box textarea::placeholder { color: var(--sub); }
+  .counter {
+    margin-top: 4px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--sub);
+  }
+
+  .attach { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .attach-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .attach-row .plus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .attach-row .plus svg { width: 12px; height: 12px; }
+  .file-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+  }
+  .file-icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--strong);
+  }
+  .file-meta { flex: 1; min-width: 0; }
+  .file-meta b {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .file-meta span { font-size: 12px; color: var(--sub); }
+  .file-del {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    padding: 0;
+    color: var(--strong);
+  }
+  .file-del svg { width: 12px; height: 12px; }
+
+  .vis-desc {
+    margin-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .vis-desc li {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 12px;
+    color: var(--sub);
+    border-bottom: 1px solid var(--line);
+  }
+  .vis-desc li b {
+    flex: none;
+    width: 64px;
+    font-weight: 600;
+    color: var(--sub);
+  }
+  .vis-desc li[data-current="true"] { color: var(--text); }
+  .vis-desc li[data-current="true"] b { color: var(--text); font-weight: 700; }
+
+  .bottom-bar {
+    position: sticky;
+    bottom: 0;
+    margin: 0 -20px -24px -20px;
+    padding: 12px 20px 20px 20px;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .bottom-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--strong);
+  }
+  .bottom-note i {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    border: 1px solid var(--text);
+  }
+  .bottom-actions { display: flex; gap: 8px; }
+  .bottom-actions button {
+    flex: 1;
+    padding: 16px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .btn-draft { border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .btn-register { border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); }
+</style>
+</head>
+<body>
+<main data-viewport="390x844" data-screen="my-assets" data-viewer-role="seller">
+
+  <!-- 화면 루트와 헤더 -->
+  <header>
+    <div class="topbar">
+      <span class="index"><i></i>ASSET LAB · 04</span>
+      <span class="role-chip" data-role="seller">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg>
+        판매 승인 회원
+      </span>
+    </div>
+    <div class="head">
+      <div class="head-row">
+        <h1>내 자산</h1>
+        <a class="btn-accent" href="#new-asset" data-action="go-new-asset">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 1.5v9M1.5 6h9"/></svg>
+          새 자산
+        </a>
+      </div>
+      <p>내가 만든 프롬프트·스킬 파일·자동화 템플릿·사용 사례</p>
+    </div>
+  </header>
+
+  <!-- 상태 필터 탭 -->
+  <nav class="tabs" role="tablist" aria-label="심사 상태 필터">
+    <button type="button" class="tab" role="tab" aria-selected="true" data-filter="all" data-status-group="all">전체<span class="count">7</span></button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-filter="draft" data-status-group="draft">임시저장<span class="count">1</span></button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-filter="in-review" data-status-group="pending revision_requested" data-role="seller">검수 중<span class="count">2</span></button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-filter="done" data-status-group="approved rejected" data-role="seller">완료<span class="count">2</span></button>
+  </nav>
+
+  <!-- 제출물에서 가져오기 -->
+  <section class="section" aria-labelledby="import-title">
+    <div class="section-head">
+      <h2 id="import-title">제출물에서 가져오기</h2>
+      <span>2건</span>
+    </div>
+    <div class="import-card">
+      <p>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 2.5v7.5M4.5 6.5L8 10l3.5-3.5M2.5 13.5h11"/></svg>
+        제출 완료된 미션 산출물을 자산으로 저장할 수 있어요
+      </p>
+      <ul class="import-list">
+        <li data-submission-id="sub-0312" data-submission-status="submitted">
+          <div class="import-meta">
+            <div class="mission">미션 03 · 회의록 자동 정리</div>
+            <div class="title">주간 회의록 3줄 요약 프롬프트</div>
+            <div class="date">제출일 2026.09.24</div>
+          </div>
+          <button type="button" class="btn-outline" data-action="convert-to-asset" data-default-visibility="private">자산으로 저장</button>
+        </li>
+        <li data-submission-id="sub-0408" data-submission-status="submitted">
+          <div class="import-meta">
+            <div class="mission">미션 04 · 업무 자동화 설계</div>
+            <div class="title">메일 분류 자동화 템플릿</div>
+            <div class="date">제출일 2026.09.27</div>
+          </div>
+          <button type="button" class="btn-outline" data-action="convert-to-asset" data-default-visibility="private">자산으로 저장</button>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 내 자산 목록 -->
+  <section class="section" aria-labelledby="list-title">
+    <div class="section-head">
+      <h2 id="list-title">내 자산 목록</h2>
+      <span>7개</span>
+    </div>
+
+    <ul class="asset-list">
+      <!-- 비공개 -->
+      <li data-asset-id="asset-101" data-visibility="private">
+        <a class="asset-row" href="#asset-101">
+          <div class="asset-body">
+            <div class="kind">프롬프트</div>
+            <div class="asset-title">고객 문의 톤 다듬기 프롬프트</div>
+            <div class="vis">공개 범위 · <b>비공개</b></div>
+          </div>
+          <div class="asset-side">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+          </div>
+        </a>
+      </li>
+
+      <!-- 멤버 공개 -->
+      <li data-asset-id="asset-102" data-visibility="member_only">
+        <a class="asset-row" href="#asset-102">
+          <div class="asset-body">
+            <div class="kind">스킬 파일</div>
+            <div class="asset-title">리서치 노트 정리 스킬</div>
+            <div class="vis">공개 범위 · <b>멤버 공개</b></div>
+          </div>
+          <div class="asset-side">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+          </div>
+        </a>
+      </li>
+
+      <!-- 판매 신청 · draft -->
+      <li data-asset-id="asset-103" data-visibility="sale_requested" data-status="draft" data-role="seller">
+        <a class="asset-row" href="#asset-103">
+          <div class="asset-body">
+            <div class="kind">자동화 템플릿</div>
+            <div class="asset-title">견적서 자동 작성 템플릿</div>
+            <div class="vis">공개 범위 · <b>판매 신청</b></div>
+            <p class="hint" data-hint-for="draft">마지막 저장 2026.09.28 14:20</p>
+          </div>
+          <div class="asset-side">
+            <span class="badge" data-badge="draft">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 10h2.5L10 4.5 7.5 2 2 7.5z"/></svg>
+              임시저장
+            </span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+          </div>
+        </a>
+      </li>
+
+      <!-- 판매 신청 · pending -->
+      <li data-asset-id="asset-104" data-visibility="sale_requested" data-status="pending" data-role="seller">
+        <a class="asset-row" href="#asset-104">
+          <div class="asset-body">
+            <div class="kind">프롬프트</div>
+            <div class="asset-title">채용 공고 초안 생성 프롬프트</div>
+            <div class="vis">공개 범위 · <b>판매 신청</b></div>
+            <p class="hint" data-hint-for="pending">운영자가 판매 기준 체크리스트로 검수하고 있어요</p>
+          </div>
+          <div class="asset-side">
+            <span class="badge" data-badge="pending">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="6" cy="6" r="4.5"/><path d="M6 3.5V6l1.8 1.2"/></svg>
+              검수 대기
+            </span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+          </div>
+        </a>
+      </li>
+
+      <!-- 판매 신청 · revision_requested -->
+      <li data-asset-id="asset-105" data-visibility="sale_requested" data-status="revision_requested" data-role="seller">
+        <a class="asset-row" href="#asset-105">
+          <div class="asset-body">
+            <div class="kind">사용 사례</div>
+            <div class="asset-title">사내 FAQ 챗봇 구축 사례</div>
+            <div class="vis">공개 범위 · <b>판매 신청</b></div>
+            <p class="hint" data-hint-for="revision_requested">운영자 수정 요청을 확인하고 다시 제출하세요</p>
+            <span class="comment" data-field="review_comment" data-role="seller"><b>운영자 코멘트</b> · 적용 전후 비교 수치를 한 줄 더 적어 주세요</span>
+          </div>
+          <div class="asset-side">
+            <span class="badge" data-badge="revision_requested">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 2.5v4.5M6 9v.5"/></svg>
+              수정 요청
+            </span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+          </div>
+        </a>
+      </li>
+
+      <!-- 판매 신청 · approved -->
+      <li data-asset-id="asset-106" data-visibility="sale_requested" data-status="approved" data-role="seller">
+        <a class="asset-row" href="#asset-106">
+          <div class="asset-body">
+            <div class="kind">스킬 파일</div>
+            <div class="asset-title">데이터 표 정리 스킬 팩</div>
+            <div class="vis">공개 범위 · <b>판매 신청</b></div>
+            <p class="hint" data-hint-for="approved">검수를 통과했어요</p>
+          </div>
+          <div class="asset-side">
+            <span class="badge" data-badge="approved">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg>
+              승인됨
+            </span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+          </div>
+        </a>
+      </li>
+
+      <!-- 판매 신청 · rejected -->
+      <li data-asset-id="asset-107" data-visibility="sale_requested" data-status="rejected" data-role="seller">
+        <a class="asset-row" href="#asset-107">
+          <div class="asset-body">
+            <div class="kind">자동화 템플릿</div>
+            <div class="asset-title">SNS 게시글 일정 자동화</div>
+            <div class="vis">공개 범위 · <b>판매 신청</b></div>
+            <p class="hint" data-hint-for="rejected">반려 사유를 확인하세요</p>
+          </div>
+          <div class="asset-side">
+            <span class="badge" data-badge="rejected">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3l6 6M9 3L3 9"/></svg>
+              반려
+            </span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <!-- 빈 상태 (데모에서는 숨김) -->
+    <div class="empty" data-empty="my-assets" hidden>
+      <p>첫 자산을 등록해 보세요</p>
+      <small>제출 완료된 미션 산출물이 있다면 제출물에서 가져오기로 바로 저장할 수 있어요</small>
+      <a class="btn-accent" href="#new-asset">새 자산</a>
+    </div>
+  </section>
+
+  <!-- 새 자산 등록 폼 -->
+  <section class="section" id="new-asset" aria-labelledby="form-title">
+    <div class="section-head">
+      <h2 id="form-title">새 자산 등록</h2>
+      <span>NEW</span>
+    </div>
+    <p class="form-intro">새 자산은 비공개로 시작해요</p>
+
+    <form data-form="new-asset" data-default-visibility="private">
+      <!-- 자산 종류 -->
+      <div class="field">
+        <div class="label">자산 종류 <span class="req">필수</span></div>
+        <div class="chips" data-field="category" role="group" aria-label="자산 종류">
+          <button type="button" class="chip" aria-pressed="true" data-category="prompt">프롬프트</button>
+          <button type="button" class="chip" aria-pressed="false" data-category="skill_file">스킬 파일</button>
+          <button type="button" class="chip" aria-pressed="false" data-category="automation_template">자동화 템플릿</button>
+          <button type="button" class="chip" aria-pressed="false" data-category="use_case">사용 사례</button>
+        </div>
+      </div>
+
+      <!-- 제목 -->
+      <div class="field">
+        <label class="label" for="asset-title">제목 <span class="req">필수</span></label>
+        <div class="input-box">
+          <input id="asset-title" type="text" maxlength="30" data-field="title" placeholder="자산 제목을 입력하세요">
+          <div class="counter">0/30</div>
+        </div>
+      </div>
+
+      <!-- 설명 -->
+      <div class="field">
+        <label class="label" for="asset-desc">설명 <span class="req">필수</span></label>
+        <div class="input-box">
+          <textarea id="asset-desc" rows="3" maxlength="200" data-field="description" placeholder="어떤 문제를 해결하는 자산인지 적어 주세요"></textarea>
+          <div class="counter">0/200</div>
+        </div>
+      </div>
+
+      <!-- 사용 방법 -->
+      <div class="field">
+        <label class="label" for="asset-usage">사용 방법 <span class="opt">선택</span></label>
+        <div class="input-box">
+          <textarea id="asset-usage" rows="3" data-field="usage_guide" placeholder="입력 예시와 사용 순서를 적어 주세요"></textarea>
+        </div>
+      </div>
+
+      <!-- 파일 첨부 -->
+      <div class="field">
+        <div class="label">파일 첨부 <span class="opt">선택</span></div>
+        <div class="attach">
+          <button type="button" class="attach-row" data-field="files">
+            파일 추가
+            <span class="plus"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 2v8M2 6h8"/></svg></span>
+          </button>
+          <button type="button" class="attach-row" data-field="example_output">
+            예시 결과 추가
+            <span class="plus"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 2v8M2 6h8"/></svg></span>
+          </button>
+          <div class="file-row" data-file-name="tone-guide.prompt.md">
+            <span class="file-icon">MD</span>
+            <div class="file-meta">
+              <b>tone-guide.prompt.md</b>
+              <span>4 KB</span>
+            </div>
+            <button type="button" class="file-del" aria-label="첨부 파일 삭제">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3l6 6M9 3L3 9"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 공개 범위 선택 -->
+      <div class="field">
+        <div class="label">공개 범위 <span class="req">필수</span></div>
+        <div class="chips" data-group="visibility" role="group" aria-label="공개 범위">
+          <button type="button" class="chip" data-visibility="private" aria-pressed="true">비공개</button>
+          <button type="button" class="chip" data-visibility="member_only" aria-pressed="false">멤버 공개</button>
+          <button type="button" class="chip" data-visibility="sale_requested" data-role="seller" aria-pressed="false">판매 신청</button>
+        </div>
+        <ul class="vis-desc">
+          <li data-desc-for="private" data-current="true"><b>비공개</b>나만 볼 수 있어요</li>
+          <li data-desc-for="member_only"><b>멤버 공개</b>유료 멤버가 볼 수 있어요</li>
+          <li data-desc-for="sale_requested" data-role="seller"><b>판매 신청</b>등록하면 운영자 검수 대기로 넘어가요</li>
+        </ul>
+      </div>
+
+      <!-- 하단 고정 버튼 -->
+      <div class="bottom-bar">
+        <p class="bottom-note" data-role="seller"><i></i>판매 신청으로 등록하면 검수 대기로 넘어가요</p>
+        <div class="bottom-actions">
+          <button type="button" class="btn-draft" data-action="save-draft" data-status="draft">임시저장</button>
+          <button type="submit" class="btn-register" data-action="register">등록</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+</main>
+</body>
+</html>
