@@ -1,0 +1,99 @@
+{
+  "$comment": "규칙 SSOT. 판정 스크립트는 이 파일만 읽는다. docs/design.md는 설명서이며, 값이 다르면 이 파일이 이긴다.",
+  "screens": [
+    "home",
+    "skill-library",
+    "mission-detail",
+    "my-assets"
+  ],
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "colors": {
+    "mono": {
+      "text": "#0A0A0A",
+      "strong": "#3D3D3D",
+      "sub": "#8A8A8A",
+      "line": "#E5E5E5",
+      "surface": "#F5F5F5",
+      "background": "#FFFFFF"
+    },
+    "accent": {
+      "accent": "#D4FF3A",
+      "on_accent_text": "#0A0A0A"
+    }
+  },
+  "box_shadow_allowed": false,
+  "radius_px": [
+    0,
+    12,
+    999
+  ],
+  "font_family": [
+    "Pretendard"
+  ],
+  "font_size_px": [
+    12,
+    14,
+    16,
+    20,
+    28
+  ],
+  "spacing_px": [
+    0,
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    28,
+    32,
+    36,
+    40,
+    44,
+    48
+  ],
+  "out_of_scope_words": [
+    "허들링 픽",
+    "구매",
+    "결제",
+    "정산",
+    "수익",
+    "피드백",
+    "판매 중",
+    "판매 중지",
+    "리뷰",
+    "평점",
+    "채팅"
+  ],
+  "allowed_status": {
+    "visibility": [
+      "private",
+      "member_only",
+      "sale_requested"
+    ],
+    "review_status": [
+      "draft",
+      "pending",
+      "revision_requested",
+      "approved",
+      "rejected"
+    ],
+    "submission_status": [
+      "draft",
+      "submitted"
+    ]
+  },
+  "research": {
+    "min_refs": 3,
+    "max_refs": 5,
+    "source_url_prefix": "https://uibowl.io"
+  },
+  "out_of_scope_status": [
+    "for_sale",
+    "suspended",
+    "feedback_pending"
+  ]
+}

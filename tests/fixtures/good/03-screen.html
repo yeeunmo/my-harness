@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>내 자산</title>
+<style>
+  :root {
+    --text: #0A0A0A; --strong: #3D3D3D; --sub: #8A8A8A; --line: #E5E5E5;
+    --surface: #F5F5F5; --bg: #FFFFFF; --accent: #D4FF3A;
+    --r-card: 12px; --r-pill: 999px;
+  }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: Pretendard, sans-serif; font-size: 16px; }
+  .screen { width: 390px; height: 844px; overflow: auto; padding: 16px; box-sizing: border-box; }
+  h1 { font-size: 28px; margin: 0 0 16px; }
+  .chip { border: 1px solid var(--line); border-radius: var(--r-pill); padding: 8px 12px; font-size: 14px; background: var(--bg); }
+  .chip[aria-pressed="true"] { background: var(--accent); color: var(--text); }
+  .card { background: var(--surface); border-radius: var(--r-card); padding: 16px; margin-top: 12px; }
+  .badge { font-size: 12px; color: var(--strong); border: 1px solid var(--line); border-radius: var(--r-pill); padding: 4px 8px; }
+  .sub { color: var(--sub); font-size: 14px; }
+  .cta { background: var(--accent); color: var(--text); border: 0; border-radius: var(--r-pill); padding: 12px 20px; font-size: 16px; }
+</style>
+</head>
+<body>
+<main class="screen" data-viewport="390x844" data-screen="my-assets">
+  <h1>내 자산</h1>
+  <nav>
+    <button class="chip" aria-pressed="true">전체</button>
+    <button class="chip" data-status="pending">검수 대기</button>
+    <button class="chip" data-status="approved">승인됨</button>
+  </nav>
+  <article class="card" data-visibility="private" data-status="draft">
+    <strong>QA 체크리스트 프롬프트</strong>
+    <p class="sub">비공개 · 임시저장</p>
+  </article>
+  <article class="card" data-visibility="sale_requested" data-status="pending" data-role="seller">
+    <strong>Claude Code QA 스킬</strong>
+    <span class="badge">판매 신청 · 검수 대기</span>
+  </article>
+  <form data-form="new-asset" data-default-visibility="private">
+    <label><input type="radio" name="visibility" value="private" checked> 비공개</label>
+    <label><input type="radio" name="visibility" value="member_only"> 멤버 공개</label>
+    <label data-role="seller"><input type="radio" name="visibility" value="sale_requested"> 판매 신청</label>
+    <button class="cta" type="button">새 자산 등록</button>
+  </form>
+</main>
+</body>
+</html>
